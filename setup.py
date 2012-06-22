@@ -30,6 +30,7 @@ setup(
         'setuptools',
         'lxml',
         'pyparsing >=1.5.2',
+        'inotifyx >=0.2.0',
         ] + install_requires,
 
     tests_require=[
