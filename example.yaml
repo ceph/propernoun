@@ -1,0 +1,34 @@
+# example config file for propernoun
+
+propernoun:
+
+  libvirt:
+    # what libvirt servers to monitor for virtual machines
+    urls:
+      - qemu://system
+      - qemu+ssh://foo@mysrv01.example.com/system?no_tty
+
+  dhcp:
+    # where the dhcpd lease file is; can be left out to use default
+    leases: /var/lib/dhcp/dhcpd.leases
+
+  pdns:
+    # sqlalchemy connection url
+    database: sqlite://TODO
+
+    # pdns table ``domains`` must have this entry
+    domain: example.com
+
+    # prefix and suffix for the dns name to give the host; for
+    # example, "prefix: vm-" or "suffix: .vm" would clearly label
+    # every entry as virtual machines
+    prefix:
+    suffix: .vm
+
+    # Any ip addresses in these networks (matching prefix and suffix)
+    # that are not seen in the current leases database will be deleted
+    # from the pdns database; if you set this too wide, and don't set
+    # prefix and/or suffix, we'll most likely delete all your dns
+    # entries. You have been warned.
+    authoritative:
+      - 10.0.20.0/16
