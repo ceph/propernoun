@@ -1,5 +1,7 @@
 import pytest
 
+from lxml import etree
+
 from .. import virt_ifaces
 
 
@@ -85,7 +87,8 @@ def test_realistic():
   </seclabel>
 </domain>
 """
-    g = virt_ifaces.get_interfaces(xml_s)
+    tree = etree.fromstring(xml_s)
+    g = virt_ifaces.get_interfaces(tree)
     got = next(g)
     assert got == ('default', '52:54:00:28:c1:26')
     with pytest.raises(StopIteration):

@@ -1,9 +1,4 @@
-from lxml import etree
-
-
-def get_interfaces(xml_s):
-    tree = etree.fromstring(xml_s)
-    print tree.xpath.__doc__
+def get_interfaces(tree):
     networks = tree.xpath(
         "/domain/devices/interface[@type='network']",
         )
