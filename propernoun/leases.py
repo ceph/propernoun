@@ -1,6 +1,7 @@
 from . import parser
 from . import watch
 
+
 def gen_leases(path):
     """
     Keep track of currently valid leases for ISC dhcpd.
