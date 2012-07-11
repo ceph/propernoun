@@ -10,16 +10,18 @@ from . import virt_ifaces
 def _handle_event(conn, domain, event, detail, opaque):
     msg = dict(
         type='libvirt',
-        name=domain.name(),
-        uuid=domain.UUIDString(),
-        uri=opaque['uri'],
+        vm=dict(
+            name=domain.name(),
+            uuid=domain.UUIDString(),
+            uri=opaque['uri'],
+            ),
         )
     if event == libvirt.VIR_DOMAIN_EVENT_DEFINED:
         xml_s = domain.XMLDesc(flags=0)
         tree = etree.fromstring(xml_s)
         ifaces = virt_ifaces.get_interfaces(tree)
         ifaces = list(ifaces)
-        msg['interfaces'] = ifaces
+        msg['vm']['interfaces'] = ifaces
     elif event == libvirt.VIR_DOMAIN_EVENT_UNDEFINED:
         pass
     else:
