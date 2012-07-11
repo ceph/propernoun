@@ -77,6 +77,10 @@ def monitor(uris, callback):
                     opaque=dict(uri=uri, callback=callback),
                     )
 
+    # signal that all current vms have been observed; that is, pruning
+    # old entries is safe
+    callback(dict(type='libvirt_complete'))
+
     while True:
         libvirt.virEventRunDefaultImpl()
 
