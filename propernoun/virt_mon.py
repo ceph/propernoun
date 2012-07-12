@@ -38,6 +38,44 @@ def _handle_event(conn, domain, event, detail, opaque):
     opaque['callback'](msg)
 
 
+def getAllDomains(conn):
+    """
+    List and get all domains, active or not.
+
+    The python bindings don't seem to have this at version
+    0.9.8-2ubuntu17.1 and a combination of listDefinedDomains and
+    listDomainsID is just miserable.
+
+    http://libvirt.org/html/libvirt-libvirt.html#virConnectListAllDomains
+
+    Also fetch the actual domain object, as we'll need the xml.
+    """
+    for name in conn.listDefinedDomains():
+        try:
+            domain = conn.lookupByName(name)
+        except libvirt.libvirtError as e:
+            if e.get_error_code() == libvirt.VIR_ERR_NO_DOMAIN:
+                # lost a race, someone undefined the domain
+                # between listing names and fetching details
+                pass
+            else:
+                raise
+        else:
+            yield domain
+
+    for id_ in conn.listDomainsID():
+        try:
+            domain = conn.lookupByID(id_)
+        except libvirt.libvirtError as e:
+            if e.get_error_code() == libvirt.VIR_ERR_NO_DOMAIN:
+                # lost a race, someone undefined the domain
+                # between listing names and fetching details
+                pass
+            else:
+                raise
+        else:
+            yield domain
+
 def monitor(uris, callback):
     libvirt.virEventRegisterDefaultImpl()
 
@@ -56,26 +94,16 @@ def monitor(uris, callback):
             )
 
     for uri, conn in conns.iteritems():
-        for name in conn.listDefinedDomains():
-            try:
-                domain = conn.lookupByName(name)
-            except libvirt.libvirtError as e:
-                if e.get_error_code() == libvirt.VIR_ERR_NO_DOMAIN:
-                    # lost a race, someone undefined the domain
-                    # between listing names and fetching details
-                    pass
-                else:
-                    raise
-            else:
-                # inject fake defined event for each domain that
-                # exists at startup
-                _handle_event(
-                    conn=conn,
-                    domain=domain,
-                    event=libvirt.VIR_DOMAIN_EVENT_DEFINED,
-                    detail=None,
-                    opaque=dict(uri=uri, callback=callback),
-                    )
+        for domain in getAllDomains(conn):
+            # inject fake defined event for each domain that
+            # exists at startup
+            _handle_event(
+                conn=conn,
+                domain=domain,
+                event=libvirt.VIR_DOMAIN_EVENT_DEFINED,
+                detail=None,
+                opaque=dict(uri=uri, callback=callback),
+                )
 
     # signal that all current vms have been observed; that is, pruning
     # old entries is safe
