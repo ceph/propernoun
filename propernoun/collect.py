@@ -48,7 +48,9 @@ class Collector(object):
             )
         fn(event)
         self.callback(
-            vms=self.vms,
-            leases=self.leases,
-            complete=(self.seen_all_vms and self.seen_leases),
+            dict(
+                vms=self.vms,
+                leases=self.leases,
+                complete=(self.seen_all_vms and self.seen_leases),
+                ),
             )

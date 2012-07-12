@@ -30,17 +30,21 @@ def test_simple_vm_then_lease():
 
     s.event(dict(type='libvirt', vm=vm))
     cb.assert_called_once_with(
-        vms=vms,
-        leases={},
-        complete=False,
+        dict(
+            vms=vms,
+            leases={},
+            complete=False,
+            ),
         )
     cb.reset_mock()
 
     s.event(dict(type='dhcp', leases=leases))
     cb.assert_called_once_with(
-        vms=vms,
-        leases=leases,
-        complete=False,
+        dict(
+            vms=vms,
+            leases=leases,
+            complete=False,
+            ),
         )
 
 
@@ -67,17 +71,21 @@ def test_simple_lease_then_vm():
 
     s.event(dict(type='dhcp', leases=leases))
     cb.assert_called_once_with(
-        vms={},
-        leases=leases,
-        complete=False,
+        dict(
+            vms={},
+            leases=leases,
+            complete=False,
+            ),
         )
     cb.reset_mock()
 
     s.event(dict(type='libvirt', vm=vm))
     cb.assert_called_once_with(
-        vms=vms,
-        leases=leases,
-        complete=False,
+        dict(
+            vms=vms,
+            leases=leases,
+            complete=False,
+            ),
         )
 
 
@@ -104,25 +112,31 @@ def test_simple_vm_then_lease_complete():
 
     s.event(dict(type='libvirt', vm=vm))
     cb.assert_called_once_with(
-        vms=vms,
-        leases={},
-        complete=False,
+        dict(
+            vms=vms,
+            leases={},
+            complete=False,
+            ),
         )
     cb.reset_mock()
 
     s.event(dict(type='dhcp', leases=leases))
     cb.assert_called_once_with(
-        vms=vms,
-        leases=leases,
-        complete=False,
+        dict(
+            vms=vms,
+            leases=leases,
+            complete=False,
+            ),
         )
     cb.reset_mock()
 
     s.event(dict(type='libvirt_complete'))
     cb.assert_called_once_with(
-        vms=vms,
-        leases=leases,
-        complete=True,
+        dict(
+            vms=vms,
+            leases=leases,
+            complete=True,
+            ),
         )
 
 
@@ -149,23 +163,29 @@ def test_simple_lease_then_complete_vm():
 
     s.event(dict(type='dhcp', leases=leases))
     cb.assert_called_once_with(
-        vms={},
-        leases=leases,
-        complete=False,
+        dict(
+            vms={},
+            leases=leases,
+            complete=False,
+            ),
         )
     cb.reset_mock()
 
     s.event(dict(type='libvirt_complete'))
     cb.assert_called_once_with(
-        vms={},
-        leases=leases,
-        complete=True,
+        dict(
+            vms={},
+            leases=leases,
+            complete=True,
+            ),
         )
     cb.reset_mock()
 
     s.event(dict(type='libvirt', vm=vm))
     cb.assert_called_once_with(
-        vms=vms,
-        leases=leases,
-        complete=True,
+        dict(
+            vms=vms,
+            leases=leases,
+            complete=True,
+            ),
         )
