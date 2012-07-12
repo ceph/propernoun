@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 def update(meta, config, _clock=None):
     if _clock is None:
-        _clock = lambda: time.time * 1e6
+        _clock = lambda: time.time() * 1e6
 
     try:
         sq.schema.DDL(
