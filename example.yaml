@@ -4,7 +4,7 @@ propernoun:
 
   libvirt:
     # what libvirt servers to monitor for virtual machines
-    urls:
+    uris:
       - qemu:///system
       - qemu+ssh://foo@mysrv01.example.com/system?no_tty
 
