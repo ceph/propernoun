@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import yaml
 
 from . import exc
 from . import main as main_
@@ -25,20 +26,26 @@ def parse_args():
         help='libvirt URI to connect to',
         )
     parser.add_argument(
-        '--dhcp-leases',
-        metavar='PATH',
-        help='path to dhcpd leases file',
+        'configfile',
+        metavar='CONFIGFILE',
+        help='path to YAML config file',
         )
     parser.set_defaults(
         # we want to hold on to this, for later
         prog=parser.prog,
         connect=[],
-        dhcp_leases='/var/lib/dhcp/dhcpd.leases',
         )
     args = parser.parse_args()
     if not args.connect:
         parser.error('Need at least one libvirt URI to connect to.')
     return args
+
+
+def read_config(path):
+    with file(path) as f:
+        obj = yaml.safe_load(f)
+    assert 'propernoun' in obj
+    return obj['propernoun']
 
 
 def main():
@@ -52,10 +59,12 @@ def main():
         level=loglevel,
         )
 
+    config = read_config(args.configfile)
+
     try:
         return main_.main(
             uris=args.connect,
-            dhcp_leases_path=args.dhcp_leases,
+            config=config,
             )
     except exc.PropernounError as e:
         print >>sys.stderr, '{prog}: {msg}'.format(

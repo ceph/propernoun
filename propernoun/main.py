@@ -7,7 +7,7 @@ from . import virt_mon
 
 def main(
     uris,
-    dhcp_leases_path,
+    config,
     ):
     events = Queue.Queue()
 
@@ -26,7 +26,7 @@ def main(
 
     def monitor_dhcp():
         """monitor dhcp"""
-        for by_ip in leases.gen_leases(path=dhcp_leases_path):
+        for by_ip in leases.gen_leases(path=config['dhcp']['leases']):
             msg = dict(
                 type='dhcp',
                 leases=by_ip,
