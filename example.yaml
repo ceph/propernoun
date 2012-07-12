@@ -12,6 +12,10 @@ propernoun:
     # where the dhcpd lease file is; can be left out to use default
     leases: /var/lib/dhcp/dhcpd.leases
 
+    # what networks are served by the dhcp server
+    networks:
+      mynet: 10.42.0.0/16
+
   pdns:
     # sqlalchemy connection url
     database: sqlite://TODO
