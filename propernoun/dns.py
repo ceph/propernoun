@@ -66,7 +66,7 @@ def update(meta, config, _clock=None):
                     # found the right network, now look for a vm
                     vm = vms_by_net_mac.get((net_name, lease['mac']))
                     if vm is not None:
-                        log.debug('Create DNS: %r %r at %d',
+                        log.debug('Create DNS: %r %s at %d',
                                   vm['name'],
                                   ip,
                                   epoch,
