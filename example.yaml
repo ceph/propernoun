@@ -28,11 +28,3 @@ propernoun:
     # every entry as virtual machines
     prefix:
     suffix: .vm
-
-    # Any ip addresses in these networks (matching prefix and suffix)
-    # that are not seen in the current leases database will be deleted
-    # from the pdns database; if you set this too wide, and don't set
-    # prefix and/or suffix, we'll most likely delete all your dns
-    # entries. You have been warned.
-    authoritative:
-      - 10.0.20.0/16
