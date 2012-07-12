@@ -31,10 +31,13 @@ setup(
         'lxml',
         'pyparsing >=1.5.2',
         'inotifyx >=0.2.0',
+        'sqlalchemy >=0.7.8',
+        'ipaddr',
         ] + install_requires,
 
     tests_require=[
         'pytest >=2.1.3',
+        'mock >=0.8.0',
         ],
 
     entry_points={
