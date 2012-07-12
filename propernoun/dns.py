@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 def update(meta, config, _clock=None):
     if _clock is None:
-        _clock = time.time
+        _clock = lambda: time.time * 1e6
 
     try:
         sq.schema.DDL(
@@ -27,6 +27,8 @@ def update(meta, config, _clock=None):
         )
     while True:
         state = (yield)
+        # if this doesn't tick fast enough, we'll create duplicate
+        # entries.. silly but not a real issue
         epoch = int(_clock())
 
         vms_by_net_mac = {}
@@ -64,7 +66,11 @@ def update(meta, config, _clock=None):
                     # found the right network, now look for a vm
                     vm = vms_by_net_mac.get((net_name, lease['mac']))
                     if vm is not None:
-                        log.debug('Create DNS: %r %r', vm['name'], ip)
+                        log.debug('Create DNS: %r %r at %d',
+                                  vm['name'],
+                                  ip,
+                                  epoch,
+                                  )
                         name = '{prefix}{name}{suffix}.{domain}'.format(
                             prefix=config['pdns'].get('prefix') or '',
                             name=vm['name'],
