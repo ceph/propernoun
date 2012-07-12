@@ -20,12 +20,6 @@ def parse_args():
         help='be more verbose',
         )
     parser.add_argument(
-        '-c', '--connect',
-        metavar='URI',
-        action='append',
-        help='libvirt URI to connect to',
-        )
-    parser.add_argument(
         'configfile',
         metavar='CONFIGFILE',
         help='path to YAML config file',
@@ -33,11 +27,8 @@ def parse_args():
     parser.set_defaults(
         # we want to hold on to this, for later
         prog=parser.prog,
-        connect=[],
         )
     args = parser.parse_args()
-    if not args.connect:
-        parser.error('Need at least one libvirt URI to connect to.')
     return args
 
 
@@ -63,7 +54,6 @@ def main():
 
     try:
         return main_.main(
-            uris=args.connect,
             config=config,
             )
     except exc.PropernounError as e:

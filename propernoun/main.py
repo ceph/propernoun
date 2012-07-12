@@ -6,7 +6,6 @@ from . import virt_mon
 
 
 def main(
-    uris,
     config,
     ):
     events = Queue.Queue()
@@ -19,7 +18,7 @@ def main(
     def monitor_libvirt():
         """monitor libvirt"""
         virt_mon.monitor(
-            uris=uris,
+            uris=config['libvirt']['uris'],
             callback=submit_libvirt_event,
             )
     callables.append(monitor_libvirt)
