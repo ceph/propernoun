@@ -66,9 +66,9 @@ def update(meta, config, _clock=None):
                     if vm is not None:
                         log.debug('Create DNS: %r %r', vm['name'], ip)
                         name = '{prefix}{name}{suffix}.{domain}'.format(
-                            prefix=config['pdns'].get('prefix', ''),
+                            prefix=config['pdns'].get('prefix') or '',
                             name=vm['name'],
-                            suffix=config['pdns'].get('suffix', ''),
+                            suffix=config['pdns'].get('suffix') or '',
                             domain=config['pdns']['domain'],
                             )
                         meta.tables['records'].insert().execute(
