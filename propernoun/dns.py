@@ -11,9 +11,17 @@ log = logging.getLogger(__name__)
 def update(meta, config, _clock=None):
     if _clock is None:
         _clock = time.time
-    sq.schema.DDL(
-        'ALTER TABLE records ADD COLUMN propernoun_epoch INTEGER',
-        ).execute(bind=meta.bind)
+
+    try:
+        sq.schema.DDL(
+            'ALTER TABLE records ADD COLUMN propernoun_epoch INTEGER',
+            ).execute(bind=meta.bind)
+    except sq.exc.OperationalError as e:
+        # ugly hack because SQL a standard isn't
+        if 'duplicate column name' in e.message:
+            pass
+        else:
+            raise
     meta.tables['records'].append_column(
         sq.Column('propernoun_epoch', sq.Integer),
         )

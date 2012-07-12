@@ -157,3 +157,45 @@ def test_prune(meta):
     rows = q.execute().fetchall()
     rows = [r['name'] for r in rows]
     assert rows == ['innocent.test.example.com']
+
+
+def test_schema_twice(meta):
+    clock = mock.Mock()
+    clock.side_effect = [1000001]
+
+    d = dns.update(
+        meta=meta,
+        config=dict(
+            dhcp=dict(
+                networks=dict(
+                    fakenet='10.1.0.0/16',
+                    ),
+                ),
+            pdns=dict(
+                domain='test.example.com',
+                ),
+            ),
+        _clock=clock,
+        )
+    # start the coroutine
+    d.next()
+
+    # imagine the process exited & restarts
+    del d
+
+    d = dns.update(
+        meta=meta,
+        config=dict(
+            dhcp=dict(
+                networks=dict(
+                    fakenet='10.1.0.0/16',
+                    ),
+                ),
+            pdns=dict(
+                domain='test.example.com',
+                ),
+            ),
+        _clock=clock,
+        )
+    # start the coroutine
+    d.next()
