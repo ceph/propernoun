@@ -82,7 +82,9 @@ def update(meta, config, _clock=None):
                             name=name,
                             type='A',
                             content=lease['ip'],
-                            ttl=30 * 60,
+                            # set dynamic vm dns ttl to just
+                            # 30seconds, they tend to come and go
+                            ttl=30,
                             ordername='',
                             auth=True,
                             propernoun_epoch=epoch,
