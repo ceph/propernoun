@@ -64,7 +64,13 @@ def update(meta, config, _clock=None):
                     domain_id = domain_row['id']
 
                     # found the right network, now look for a vm
-                    vm = vms_by_net_mac.get((net_name, lease['mac']))
+                    try:
+                        mac = lease['mac']
+                    except KeyError:
+                        # sometimes we see "binding state abandoned"
+                        # entries with no mac
+                        continue
+                    vm = vms_by_net_mac.get((net_name, mac))
                     if vm is not None:
                         log.debug('Create DNS: %r %s at %d',
                                   vm['name'],
