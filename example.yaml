@@ -17,8 +17,11 @@ propernoun:
       mynet: 10.42.0.0/16
 
   pdns:
-    # sqlalchemy connection url
-    database: sqlite://TODO
+    # sqlalchemy connection url -- sqlite3
+    database: sqlite://path/to/powerdns.sql
+
+    # sqlalchemy connection url -- mysql
+    database: database: mysql://username:password@hostname/databasename?charset=utf8&use_unicode=0
 
     # pdns table ``domains`` must have this entry
     domain: example.com

@@ -28,6 +28,7 @@ def main(
     dns_updater = dns.update(
         meta=meta,
         config=config,
+        db=config['pdns']['database'],
         )
     # start the coroutine
     dns_updater.next()

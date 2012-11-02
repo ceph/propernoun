@@ -8,17 +8,22 @@ import sqlalchemy as sq
 log = logging.getLogger(__name__)
 
 
-def update(meta, config, _clock=None):
+def update(meta, config, db, _clock=None):
     if _clock is None:
         _clock = lambda: time.time() * 1e6
 
+    if "sqlite" in db:
+        query="ALTER TABLE records ADD COLUMN propernoun_epoch INTEGER"
+    if "mysql" in db:
+        query="ALTER TABLE records ADD COLUMN propernoun_epoch bigint(8)"
+
     try:
         sq.schema.DDL(
-            'ALTER TABLE records ADD COLUMN propernoun_epoch INTEGER',
+            query,
             ).execute(bind=meta.bind)
     except sq.exc.OperationalError as e:
         # ugly hack because SQL a standard isn't
-        if 'duplicate column name' in e.message:
+        if 'uplicate column name' in e.message:
             pass
         else:
             raise
